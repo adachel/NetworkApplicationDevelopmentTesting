@@ -9,9 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatBD", "ChatBD\ChatBD.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonChat", "CommonChat\CommonChat.csproj", "{D7D01DF5-CEDA-415F-8C27-54E9BDFADE1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatNetWork", "ChatNetWork\ChatNetWork.csproj", "{5F1F3444-B9E8-487A-BC49-910A31EC376E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatNetWork", "ChatNetWork\ChatNetWork.csproj", "{5F1F3444-B9E8-487A-BC49-910A31EC376E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetworkApplicationDevelopmentTesting", "NetworkApplicationDevelopmentTesting\NetworkApplicationDevelopmentTesting.csproj", "{80D26987-AC68-453B-BB25-7F1D3691B198}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatApp", "ChatApp\ChatApp.csproj", "{894CAEFE-F948-4143-AEF6-64F4B08BE6FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkApplicationDevelopmentTesting.Test", "NetworkApplicationDevelopmentTesting.Test\NetworkApplicationDevelopmentTesting.Test.csproj", "{C8DFB819-8430-423C-9408-68AAA4A987A2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +43,14 @@ Global
 		{80D26987-AC68-453B-BB25-7F1D3691B198}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80D26987-AC68-453B-BB25-7F1D3691B198}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80D26987-AC68-453B-BB25-7F1D3691B198}.Release|Any CPU.Build.0 = Release|Any CPU
+		{894CAEFE-F948-4143-AEF6-64F4B08BE6FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{894CAEFE-F948-4143-AEF6-64F4B08BE6FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{894CAEFE-F948-4143-AEF6-64F4B08BE6FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{894CAEFE-F948-4143-AEF6-64F4B08BE6FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8DFB819-8430-423C-9408-68AAA4A987A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8DFB819-8430-423C-9408-68AAA4A987A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8DFB819-8430-423C-9408-68AAA4A987A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8DFB819-8430-423C-9408-68AAA4A987A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

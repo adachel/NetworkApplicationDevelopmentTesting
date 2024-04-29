@@ -1,0 +1,133 @@
+﻿using ChatBD;
+using ChatNetWork;
+using CommonChat.DTO;
+using CommonChat.Models;
+using System.Net;
+
+namespace ChatApp
+{
+    public class ChatServer
+    {
+        private IMessageSource _iMessageSource;
+
+        private bool _isWork = true;
+
+        public Dictionary<string, IPEndPoint> clients = new Dictionary<string, IPEndPoint>();
+
+        public ChatServer(IMessageSource iMessageSource)
+        {
+            _iMessageSource = iMessageSource;
+        }
+
+        public async Task ProcessMessageAsync(ChatMessage chatMessage, IPEndPoint iPEndPoint)
+        {
+            switch (chatMessage.Command)
+            {
+                case Command.Message:
+                    await ReplyMessageAsync(chatMessage);
+                    break;
+                case Command.Confirmation:
+                    await ConfirmationAsync(chatMessage.Id);
+                    break;
+                case Command.Register:
+                    await RegisterAsync(chatMessage, iPEndPoint);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public async Task ReplyMessageAsync(ChatMessage chatMessage)
+        {
+            if (clients.TryGetValue(chatMessage.ToName!, out IPEndPoint? iPEndPoint))
+            {
+                using (var context = new ChatContext())
+                {
+                    var fromName = context.Users.FirstOrDefault(x => x.Name == chatMessage.FromName);
+                    var toName = context.Users.FirstOrDefault(x => x.Name == chatMessage.ToName);
+                    var message = new Message
+                    {
+                        Text = chatMessage.Text,
+                        FromUser = fromName,
+                        ToUser = toName,
+                        IsReceived = false
+                    };   
+                    await context.Messages.AddAsync(message);
+                    await context.SaveChangesAsync();
+
+                    chatMessage.Id = message.Id;
+                }
+
+                _iMessageSource.Send(chatMessage, iPEndPoint);
+
+                await Console.Out.WriteLineAsync($"Send messsage {chatMessage.FromName} to {chatMessage.ToName}");
+            }
+        }
+
+        public async Task ConfirmationAsync(int? id)
+        {
+            await Console.Out.WriteLineAsync("Message id " + id);
+
+            using (var context = new ChatContext())
+            {
+                var message = context.Messages.FirstOrDefault(x => x.Id == id);
+                if (message != null)
+                {
+                    message.IsReceived = true;
+                    await context.SaveChangesAsync();
+                }
+                
+            }
+        }
+
+        public async Task RegisterAsync(ChatMessage chatMessage, IPEndPoint iPEndPoint)
+        {
+            Console.WriteLine($"Message register name {chatMessage.FromName}");
+            clients.Add(chatMessage.FromName, iPEndPoint);
+
+            using (var context = new ChatContext())
+            {
+                var conAny = context.Users.Any(x => x.Name == chatMessage.FromName);
+                if (conAny)
+                {
+                    Console.WriteLine("User already exist in database");
+                    return;
+                }
+
+                await context.Users.AddAsync(new User() { Name = chatMessage.FromName});
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public void Stop()
+        { 
+            _isWork = false;
+        }
+
+
+
+
+        public async Task WorkAsync()
+        {
+            Console.WriteLine("Wait message from client");
+            while (_isWork)
+            {
+                try
+                {
+                    var remoteIPEndPoint = _iMessageSource.CreateNewIPEndPoint();
+                    var chatMessage = _iMessageSource.Receive(ref remoteIPEndPoint);
+                    if (chatMessage != null) 
+                    {
+                        await ProcessMessageAsync(chatMessage, remoteIPEndPoint);
+                    }
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine(e.StackTrace + " " + e.Message);
+                }
+
+
+            }
+        }
+    }
+}

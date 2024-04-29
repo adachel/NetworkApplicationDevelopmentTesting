@@ -18,17 +18,23 @@ namespace ChatNetWork
             _udpClient = new UdpClient(port);
         }
 
-        public ChatMessage Receive(ref IPEndPoint iPEndPoint)
-        {
-            byte[] data = _udpClient.Receive(ref iPEndPoint); 
-            string jsonMessage = Encoding.UTF8.GetString(data);
-            return ChatMessage.FromJson(jsonMessage);
-        }
-
         public void Send(ChatMessage chatMessage, IPEndPoint iPEndPoint)
         {
             byte[] data = Encoding.UTF8.GetBytes(chatMessage.ToJson());
             _udpClient.Send(data, data.Length, iPEndPoint);
         }
+
+        public ChatMessage Receive(ref IPEndPoint iPEndPoint)
+        {
+            byte[] data = _udpClient.Receive(ref iPEndPoint);
+            string jsonMessage = Encoding.UTF8.GetString(data);
+            return ChatMessage.FromJson(jsonMessage);
+        }
+
+        public IPEndPoint CreateNewIPEndPoint()
+        {
+            return new IPEndPoint(IPAddress.Any, 0);
+        }
+
     }
 }
