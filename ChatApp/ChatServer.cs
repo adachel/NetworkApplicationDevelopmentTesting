@@ -12,7 +12,7 @@ namespace ChatApp
 
         private bool _isWork = true;
 
-        public Dictionary<string, IPEndPoint> clients = new Dictionary<string, IPEndPoint>();
+        public Dictionary<string, IPEndPoint> clients = new Dictionary<string, IPEndPoint>(); // словарь: имя и iPEndPoint
 
         public ChatServer(IMessageSource iMessageSource)
         {
@@ -114,9 +114,13 @@ namespace ChatApp
             {
                 try
                 {
-                    var remoteIPEndPoint = _iMessageSource.CreateNewIPEndPoint();
-                    var chatMessage = _iMessageSource.Receive(ref remoteIPEndPoint);
-                    if (chatMessage != null) 
+                    var remoteIPEndPoint = _iMessageSource.CreateNewIPEndPoint(); // сервер должен контролировать действия клиентов
+                                                                                  // на всех сетевых интерфейсах. По всем портам
+
+                    var chatMessage = _iMessageSource.Receive(ref remoteIPEndPoint); // принимает сообщение с remoteIPEndPoint
+                                                                                     // и сериализует его в объект ChatMessage
+
+                    if (chatMessage != null) // если ChatMessage не пустой
                     {
                         await ProcessMessageAsync(chatMessage, remoteIPEndPoint);
                     }

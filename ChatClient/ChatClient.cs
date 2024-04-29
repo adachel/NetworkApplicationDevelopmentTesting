@@ -10,12 +10,55 @@ namespace TChatClient
 {
     internal class ChatClient
     {
+        private UdpClient _udpClient;
+        public string Name { get; set; }
+
+        public ChatClient(int port)
+        {
+            _udpClient = new UdpClient(port);
+        }
+
+        public void Send(ChatMessage chatMessage, IPEndPoint iPEndPoint)
+        {
+            byte[] data = Encoding.UTF8.GetBytes(chatMessage.ToJson());
+            _udpClient.Send(data, data.Length, iPEndPoint);
+        }
+
+        public ChatMessage Receive(ref IPEndPoint iPEndPoint)
+        {
+            byte[] data = _udpClient.Receive(ref iPEndPoint);
+            string jsonMessage = Encoding.UTF8.GetString(data);
+            return ChatMessage.FromJson(jsonMessage);
+        }
+
+        public IPEndPoint CreateNewIPEndPoint()
+        {
+            return new IPEndPoint(IPAddress.Any, 0);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         private ChatMessage? message;
         private byte[]? sendData;
         private byte[]? receiveData;
         private string? messageText;
 
-        public string Name { get; set; }
+        
         public string ToName { get; set; }
 
 

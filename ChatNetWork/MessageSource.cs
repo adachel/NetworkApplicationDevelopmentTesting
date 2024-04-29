@@ -33,7 +33,7 @@ namespace ChatNetWork
 
         public IPEndPoint CreateNewIPEndPoint()
         {
-            return new IPEndPoint(IPAddress.Any, 0);
+            return new IPEndPoint(IPAddress.Any, 0); // сервер должен контролировать действия клиентов на всех сетевых интерфейсах.
         }
 
     }
