@@ -30,7 +30,7 @@ namespace ChatBD.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    text = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    text = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     IsReceived = table.Column<bool>(type: "boolean", nullable: false),
                     to_user_id = table.Column<int>(type: "integer", nullable: false),
                     from_user_id = table.Column<int>(type: "integer", nullable: false)
@@ -64,7 +64,7 @@ namespace ChatBD.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder) // Down - это то, куда откатимся, если удалим эту миграцию
+        protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "messages");
