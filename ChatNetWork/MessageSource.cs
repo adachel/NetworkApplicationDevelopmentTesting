@@ -28,6 +28,9 @@ namespace ChatNetWork
         {
             byte[] data = _udpClient.Receive(ref iPEndPoint);
             string jsonMessage = Encoding.UTF8.GetString(data);
+
+            Console.WriteLine(jsonMessage);
+
             return ChatMessage.FromJson(jsonMessage);
         }
 
