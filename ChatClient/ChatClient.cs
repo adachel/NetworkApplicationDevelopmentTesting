@@ -10,13 +10,49 @@ namespace TChatClient
 {
     internal class ChatClient
     {
-        private UdpClient _udpClient;
-        public string Name { get; set; }
+        private IPEndPoint _iPEndPoint;
+        private UdpClient _udpClient = new UdpClient();
+        private ChatMessage _chatMessage = new ChatMessage();
+        private bool _isWork = true;
+        private string _messageText;
 
-        public ChatClient(int port)
+        public ChatClient(string ipAddress, int port)
         {
-            _udpClient = new UdpClient(port);
+            _iPEndPoint = new IPEndPoint(IPAddress.Parse(ipAddress), port);
         }
+
+        public void WorkClient()
+        {
+            Console.WriteLine("Введите свое имя");
+            string name = Console.ReadLine()!;
+            _chatMessage.FromName = name;
+
+            while (_isWork)
+            {
+                do
+                {
+                    Console.WriteLine("Введите сообщение");
+                    _messageText = Console.ReadLine();
+                    if (_messageText.ToLower().Equals("exit"))
+                    {
+                        Stop();
+                    }
+                } while (string.IsNullOrEmpty(_messageText));
+                
+
+
+
+            }
+
+        }
+
+
+        public void Stop()
+        {
+            _isWork = false;
+        }
+
+
 
         public void Send(ChatMessage chatMessage, IPEndPoint iPEndPoint)
         {
@@ -53,13 +89,13 @@ namespace TChatClient
 
 
 
-        private ChatMessage? message;
+       
         private byte[]? sendData;
         private byte[]? receiveData;
-        private string? messageText;
+        
 
         
-        public string ToName { get; set; }
+      
 
 
 
