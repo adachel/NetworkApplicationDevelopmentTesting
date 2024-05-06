@@ -10,8 +10,11 @@ namespace ChatNetWork
 {
     public interface IMessageSource
     {
-        void Send(ChatMessage chatMessage, IPEndPoint iPEndPoint);
+        void SendMessage(ChatMessage chatMessage, IPEndPoint iPEndPoint);
         ChatMessage Receive(ref IPEndPoint iPEndPoint);
         IPEndPoint CreateNewIPEndPoint();
+
+
+        IPEndPoint GetServerIPEndPoint();   //
     }
 }

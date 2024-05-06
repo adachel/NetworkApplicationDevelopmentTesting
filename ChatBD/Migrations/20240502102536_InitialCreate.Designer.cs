@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ChatBD.Migrations
 {
     [DbContext(typeof(ChatContext))]
-    [Migration("20240425082728_InitialCreate")]
+    [Migration("20240502102536_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -27,7 +27,7 @@ namespace ChatBD.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("CommonChat.Message", b =>
+            modelBuilder.Entity("CommonChat.Models.Message", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -43,7 +43,6 @@ namespace ChatBD.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("Text")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)")
                         .HasColumnName("text");
@@ -62,7 +61,7 @@ namespace ChatBD.Migrations
                     b.ToTable("messages", (string)null);
                 });
 
-            modelBuilder.Entity("CommonChat.User", b =>
+            modelBuilder.Entity("CommonChat.Models.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -79,15 +78,15 @@ namespace ChatBD.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("CommonChat.Message", b =>
+            modelBuilder.Entity("CommonChat.Models.Message", b =>
                 {
-                    b.HasOne("CommonChat.User", "FromUser")
+                    b.HasOne("CommonChat.Models.User", "FromUser")
                         .WithMany("FromMessages")
                         .HasForeignKey("FromUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CommonChat.User", "ToUser")
+                    b.HasOne("CommonChat.Models.User", "ToUser")
                         .WithMany("ToMessages")
                         .HasForeignKey("ToUserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -98,7 +97,7 @@ namespace ChatBD.Migrations
                     b.Navigation("ToUser");
                 });
 
-            modelBuilder.Entity("CommonChat.User", b =>
+            modelBuilder.Entity("CommonChat.Models.User", b =>
                 {
                     b.Navigation("FromMessages");
 
