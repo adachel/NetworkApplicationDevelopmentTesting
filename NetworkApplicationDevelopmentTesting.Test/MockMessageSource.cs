@@ -12,7 +12,7 @@ namespace NetworkApplicationDevelopmentTesting.Test
 {
     public class MockMessageSource : IMessageSource
     {
-        private Queue<ChatMessage> _messages = new Queue<ChatMessage>();  
+        private Queue<ChatMessage> _messages = new Queue<ChatMessage>();
 
         private ChatServer _chatServer;
 
@@ -28,15 +28,14 @@ namespace NetworkApplicationDevelopmentTesting.Test
 
         public MockMessageSource()
         {
-            _messages.Enqueue(new ChatMessage() { Command = Command.Register, FromName = "Alex"});
-            _messages.Enqueue(new ChatMessage() { Command = Command.Register, FromName = "Ivan"});
+            _messages.Enqueue(new ChatMessage() { Command = Command.Register, FromName = "Alex" });
+            _messages.Enqueue(new ChatMessage() { Command = Command.Register, FromName = "Ivan" });
             _messages.Enqueue(new ChatMessage() { Command = Command.Message, FromName = "Alex", ToName = "Ivan", Text = "Hello Ivan" });
             _messages.Enqueue(new ChatMessage() { Command = Command.Message, FromName = "Ivan", ToName = "Alex", Text = "Hello Alex" });
         }
 
         public IPEndPoint CreateNewIPEndPoint()
         {
-            // throw new NotImplementedException();
             return null!;
         }
 
@@ -51,9 +50,26 @@ namespace NetworkApplicationDevelopmentTesting.Test
             return _messages.Dequeue();
         }
 
+
+
+
+
+
+
+
         public void Send(ChatMessage chatMessage, IPEndPoint iPEndPoint)
         {
             // throw new NotImplementedException();
+        }
+
+        public void SendMessage(ChatMessage chatMessage, IPEndPoint iPEndPoint)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IPEndPoint GetServerIPEndPoint()
+        {
+            throw new NotImplementedException();
         }
     }
 }

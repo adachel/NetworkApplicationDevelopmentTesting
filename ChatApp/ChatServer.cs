@@ -58,15 +58,15 @@ namespace ChatApp
                     chatMessage.Id = message.Id;
                 }
 
-                _iMessageSource.Send(chatMessage, iPEndPoint);
+                _iMessageSource.SendMessage(chatMessage, iPEndPoint);
 
-                await Console.Out.WriteLineAsync($"Send messsage {chatMessage.FromName} to {chatMessage.ToName}");
+                Console.WriteLine($"Send messsage {chatMessage.FromName} to {chatMessage.ToName}");
             }
         }
 
         public async Task ConfirmationAsync(int? id)
         {
-            await Console.Out.WriteLineAsync("Message id " + id);
+            Console.Out.WriteLine("Message id " + id);
 
             using (var context = new ChatContext())
             {
@@ -83,18 +83,18 @@ namespace ChatApp
         public async Task RegisterAsync(ChatMessage chatMessage, IPEndPoint iPEndPoint)
         {
             Console.WriteLine($"Message register name {chatMessage.FromName}");
-            clients.Add(chatMessage.FromName, iPEndPoint);
+            clients.Add(chatMessage.FromName, iPEndPoint);      // добавление в Dictionary<string, IPEndPoint> clients
 
             using (var context = new ChatContext())
             {
-                var conAny = context.Users.Any(x => x.Name == chatMessage.FromName);
-                if (conAny)
+                var conAny = context.Users.Any(x => x.Name == chatMessage.FromName); // сравнивает FromName с наличием в БД
+                if (conAny) // если true, то такой пользов уже есть
                 {
                     Console.WriteLine("User already exist in database");
                     return;
                 }
 
-                await context.Users.AddAsync(new User() { Name = chatMessage.FromName});
+                await context.Users.AddAsync(new User() { Name = chatMessage.FromName});    // добавляем User в БД
                 await context.SaveChangesAsync();
             }
         }

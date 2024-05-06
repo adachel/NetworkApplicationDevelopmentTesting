@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TChatClient
 {
-    internal enum Command
+    public enum Command
     {
         Message,
         Confirmation,
