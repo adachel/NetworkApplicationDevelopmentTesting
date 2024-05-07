@@ -1,10 +1,11 @@
 using ChatApp;
 using ChatBD;
+using ChatNetWork;
 using CommonChat.DTO;
 
 namespace NetworkApplicationDevelopmentTesting.Test
 {
-    public class Tests
+    public class UnitTestServer
     {
         [SetUp]
         public void Setup()
@@ -48,7 +49,7 @@ namespace NetworkApplicationDevelopmentTesting.Test
             }
         }
 
-        [TearDown]
+            [TearDown]
         public void Teardown() 
         {
             using (var context = new ChatContext())

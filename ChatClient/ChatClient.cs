@@ -10,6 +10,53 @@ namespace TChatClient
 {
     public class ChatClient
     {
+<<<<<<< HEAD
+        private IPEndPoint _iPEndPoint;
+        private UdpClient _udpClient = new UdpClient();
+        private ChatMessage _chatMessage = new ChatMessage();
+        private bool _isWork = true;
+        private string _messageText;
+
+        public ChatClient(string ipAddress, int port)
+        {
+            _iPEndPoint = new IPEndPoint(IPAddress.Parse(ipAddress), port);
+        }
+
+        public void WorkClient()
+        {
+            Console.WriteLine("Введите свое имя");
+            string name = Console.ReadLine()!;
+            _chatMessage.FromName = name;
+
+            while (_isWork)
+            {
+                do
+                {
+                    Console.WriteLine("Введите сообщение");
+                    _messageText = Console.ReadLine();
+                    if (_messageText.ToLower().Equals("exit"))
+                    {
+                        Stop();
+                    }
+                } while (string.IsNullOrEmpty(_messageText));
+                
+
+
+
+            }
+
+        }
+
+
+        public void Stop()
+        {
+            _isWork = false;
+        }
+
+
+
+        public void Send(ChatMessage chatMessage, IPEndPoint iPEndPoint)
+=======
         private ChatMessage _chatMessage;
         private string _host = "127.0.0.1";
         private int _port = 7000;
@@ -29,6 +76,7 @@ namespace TChatClient
         }
 
         public ChatClient()
+>>>>>>> 06b73a9abacefd1bc42b5f3256af67ec4b369363
         {
             _udpClient = new UdpClient();
             _iPEndPoint = new IPEndPoint(IPAddress.Parse(_host), _port);
@@ -128,6 +176,85 @@ namespace TChatClient
             return ChatMessage.FromJson(jsonMessage);
         }
 
+<<<<<<< HEAD
+        public IPEndPoint CreateNewIPEndPoint()
+        {
+            return new IPEndPoint(IPAddress.Any, 0);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+       
+        private byte[]? sendData;
+        private byte[]? receiveData;
+        
+
+        
+      
+
+
+
+        public void SentMessage(string From, string ip)
+        {
+            UdpClient udpClient = new UdpClient();
+            IPEndPoint iPEndPoint = new IPEndPoint(IPAddress.Parse(ip), 7000);
+
+            while (true)
+            {
+                do
+                {
+                    Console.WriteLine("Введите сообщение");
+
+                    messageText = Console.ReadLine()!.ToLower();
+                    if (messageText.Equals("exit"))
+                    {
+                        return;
+                    }
+                }
+                while (string.IsNullOrEmpty(messageText));
+
+                message = new ChatMessage() { FromName = Name, ToName = ToName, Text = messageText };
+
+                string json = message.ToJson();
+                sendData = Encoding.UTF8.GetBytes(json);
+                udpClient.Send(sendData, sendData.Length, iPEndPoint);
+
+
+                var t = new Task(() =>
+                {
+                    receiveData = udpClient.Receive(ref iPEndPoint);
+                });
+                t.Start();
+
+                try
+                {
+                    t.Wait(1000);
+                    messageText = Encoding.UTF8.GetString(receiveData!);
+                    Console.WriteLine(messageText);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Сервер не отвечает");
+                }
+            }
+        }
+=======
+>>>>>>> 06b73a9abacefd1bc42b5f3256af67ec4b369363
     }
 
 
