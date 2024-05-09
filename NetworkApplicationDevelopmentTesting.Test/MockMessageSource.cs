@@ -18,6 +18,7 @@ namespace NetworkApplicationDevelopmentTesting.Test
 
         private IPEndPoint _iPEndPoint = new IPEndPoint(IPAddress.Any, 0);
 
+
         public ChatServer ChatServer { get => _chatServer; set => _chatServer = value; }
 
 

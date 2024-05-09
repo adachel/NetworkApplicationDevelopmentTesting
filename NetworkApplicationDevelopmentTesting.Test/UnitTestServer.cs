@@ -10,12 +10,12 @@ namespace NetworkApplicationDevelopmentTesting.Test
         [SetUp]
         public void Setup()
         {
-            //using (var context = new ChatContext())
-            //{
-            //    context.Messages.RemoveRange(context.Messages);
-            //    context.Users.RemoveRange(context.Users);
-            //    context.SaveChanges();
-            //}
+            using (var context = new ChatContext())
+            {
+                context.Messages.RemoveRange(context.Messages);
+                context.Users.RemoveRange(context.Users);
+                context.SaveChanges();
+            }
         }
 
         [Test]
