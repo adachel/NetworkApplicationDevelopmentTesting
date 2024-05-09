@@ -1,22 +1,29 @@
-﻿using System;
+﻿using ChatNetWork;
+using CommonChat.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using CommonChat.DTO;
-using ChatNetWork;
 
-namespace ChatApp
+namespace NetworkApplicationDevelopmentTesting.Test
 {
-    public class ChatClient
+    public class FakeChatClient
     {
         private readonly string _name;
         private readonly IMessageSource _messageSource;
         private readonly IPEndPoint _serverEndPoint;
 
-        public ChatClient(string name, IMessageSource messageSource)
+
+        public string FromName { get; set; } = "";
+        public string ToName { get; set; } = "";
+        public string FromMessage { get; set; } = "";
+        public string ToMessage { get; set; } = "";
+        public ChatMessage MessageConfirm { get; set; } 
+
+
+        public FakeChatClient(string name, IMessageSource messageSource)
         {
             _name = name;
             _messageSource = messageSource;
@@ -36,16 +43,20 @@ namespace ChatApp
 
         public void ProcessSendMessage()
         {
-            while (true)
+            int count = 0;
+
+            while (count < 1)
             {
                 Console.WriteLine("Input receiver's name");
-                var receiver = Console.ReadLine();
+                var receiver = ToName;
                 Console.WriteLine("Input your message");
-                var text = Console.ReadLine();
+                var text = ToMessage;
                 var chatMessage = new ChatMessage()
                 { Command = Command.Message, FromName = _name, ToName = receiver, Text = text };
 
                 SendMessage(chatMessage, _serverEndPoint);
+
+                count++;
             }
         }
 
@@ -58,6 +69,10 @@ namespace ChatApp
             {
                 var data = _messageSource.Receive(ref ip);
                 Console.WriteLine($"Сообщение получено от {data.FromName}: \n{data.Text}");
+
+                FromName = data.FromName;
+                FromMessage = data.Text;
+
                 Confirmation(data, ip);
             }
         }
@@ -65,6 +80,7 @@ namespace ChatApp
         public void Confirmation(ChatMessage chatMessage, IPEndPoint ip)
         {
             var message = new ChatMessage() { Command = Command.Confirmation, Id = chatMessage.Id };
+            MessageConfirm = message;
             SendMessage(message, ip);
         }
 
@@ -73,6 +89,5 @@ namespace ChatApp
             new Thread(() => ProcessSendMessage()).Start();
             Listen();
         }
-
     }
 }

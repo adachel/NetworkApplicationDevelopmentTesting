@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TChatClient
 {
-    internal class ChatMessage
+    public class ChatMessage
     {
         public int Id { get; set; }
         public string? FromName { get; set; }

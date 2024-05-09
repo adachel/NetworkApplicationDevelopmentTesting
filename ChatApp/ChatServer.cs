@@ -12,7 +12,7 @@ namespace ChatApp
 
         private bool _isWork = true;
 
-        public Dictionary<string, IPEndPoint> clients = new Dictionary<string, IPEndPoint>();
+        public Dictionary<string, IPEndPoint> clients = new Dictionary<string, IPEndPoint>(); // словарь: имя и iPEndPoint
 
         public ChatServer(IMessageSource iMessageSource)
         {
@@ -58,15 +58,15 @@ namespace ChatApp
                     chatMessage.Id = message.Id;
                 }
 
-                _iMessageSource.Send(chatMessage, iPEndPoint);
+                _iMessageSource.SendMessage(chatMessage, iPEndPoint);
 
-                await Console.Out.WriteLineAsync($"Send messsage {chatMessage.FromName} to {chatMessage.ToName}");
+                Console.WriteLine($"Send messsage {chatMessage.FromName} to {chatMessage.ToName}");
             }
         }
 
         public async Task ConfirmationAsync(int? id)
         {
-            await Console.Out.WriteLineAsync("Message id " + id);
+            Console.Out.WriteLine("Message id " + id);
 
             using (var context = new ChatContext())
             {
@@ -83,18 +83,18 @@ namespace ChatApp
         public async Task RegisterAsync(ChatMessage chatMessage, IPEndPoint iPEndPoint)
         {
             Console.WriteLine($"Message register name {chatMessage.FromName}");
-            clients.Add(chatMessage.FromName, iPEndPoint);
+            clients.Add(chatMessage.FromName, iPEndPoint);      // добавление в Dictionary<string, IPEndPoint> clients
 
             using (var context = new ChatContext())
             {
-                var conAny = context.Users.Any(x => x.Name == chatMessage.FromName);
-                if (conAny)
+                var conAny = context.Users.Any(x => x.Name == chatMessage.FromName); // сравнивает FromName с наличием в БД
+                if (conAny) // если true, то такой пользов уже есть
                 {
                     Console.WriteLine("User already exist in database");
                     return;
                 }
 
-                await context.Users.AddAsync(new User() { Name = chatMessage.FromName});
+                await context.Users.AddAsync(new User() { Name = chatMessage.FromName});    // добавляем User в БД
                 await context.SaveChangesAsync();
             }
         }
@@ -114,9 +114,13 @@ namespace ChatApp
             {
                 try
                 {
-                    var remoteIPEndPoint = _iMessageSource.CreateNewIPEndPoint();
-                    var chatMessage = _iMessageSource.Receive(ref remoteIPEndPoint);
-                    if (chatMessage != null) 
+                    var remoteIPEndPoint = _iMessageSource.CreateNewIPEndPoint(); // сервер должен контролировать действия клиентов
+                                                                                  // на всех сетевых интерфейсах. По всем портам
+
+                    var chatMessage = _iMessageSource.Receive(ref remoteIPEndPoint); // принимает сообщение с remoteIPEndPoint
+                                                                                     // и сериализует его в объект ChatMessage
+
+                    if (chatMessage != null) // если ChatMessage не пустой
                     {
                         await ProcessMessageAsync(chatMessage, remoteIPEndPoint);
                     }
