@@ -11,11 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ChatBD.Migrations
 {
     [DbContext(typeof(ChatContext))]
-<<<<<<<< HEAD:ChatBD/Migrations/20240501113020_InitialCreate.Designer.cs
-    [Migration("20240501113020_InitialCreate")]
-========
-    [Migration("20240502102536_InitialCreate")]
->>>>>>>> fromWork:ChatBD/Migrations/20240502102536_InitialCreate.Designer.cs
+    [Migration("20240511104627_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

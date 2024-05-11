@@ -21,11 +21,8 @@ namespace ChatBD
         {
             optionsBuilder.LogTo(Console.WriteLine)
                           .UseLazyLoadingProxies()
-<<<<<<< HEAD
                           .UseNpgsql("Host=localhost;Port=5432;Username=aaa;Password=1234;Database=BDAAA");
-=======
-                          .UseNpgsql("Host=localhost;Port=5432;Username=aaa;Password=1234;Database=fromWork");
->>>>>>> fromWork
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
