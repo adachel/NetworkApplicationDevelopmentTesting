@@ -1,8 +1,12 @@
-﻿using ChatApp;
+﻿using Castle.DynamicProxy;
+using ChatApp;
 using ChatBD;
 using ChatNetWork;
+using CommonChat.DTO;
+using Moq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -12,68 +16,74 @@ namespace NetworkApplicationDevelopmentTesting.Test
 {
     public class UnitTestClient
     {
-        //private ChatServer _server = new ChatServer(new MessageSource());
+        private ChatMessage chatMessage;
+        private IPEndPoint ipEndPoint;
+
         [SetUp]
         public void Setup()
         {
-            //Task.Run(() => _server.WorkAsync()).Wait(1000);
+            chatMessage = new ChatMessage();
+            ipEndPoint = new IPEndPoint(IPAddress.Parse("123.123.123.123"), 11111);
         }
 
-
-        [Test] // регистрация
-        public void TestRegistration()
+        [Test] // Register
+        public void Test1()
         {
-            var _server = new ChatServer(new MessageSource(2222));
-            Task.Run(() => _server.WorkAsync());
+            var mock = new Mock<IMessageSource>();
 
-            var client = new FakeChatClient("Den", new MessageSource(0, "127.0.0.1", 2222));
-            Task.Run(() => client.Start()).Wait(1000);
+            mock.Setup(x => x.GetServerIPEndPoint()).Returns(ipEndPoint);
 
-            Assert.IsTrue(_server.clients.Count == 1);
-            Assert.IsTrue(_server.clients.Keys.First() == "Den");
+            var client = new ChatClient("name", mock.Object);
+
+            client.Register();
+
+            mock.Verify(x => x.SendMessage(It.IsAny<ChatMessage>(), ipEndPoint));
         }
 
+        [Test] // Confirmation
+        public void Test2() 
+        {
+            var mock = new Mock<IMessageSource>();
+
+            var client = new ChatClient("name", mock.Object);
+
+            client.Confirmation(chatMessage, ipEndPoint);
+
+            mock.Verify(x => x.SendMessage(It.IsAny<ChatMessage>(), ipEndPoint));
+        }
+
+        [Test] // SendMessage
+        public void Test3()
+        {
+            var mock = new Mock<IMessageSource>();
+
+            var client = new ChatClient("name", mock.Object);
+
+            client.SendMessage(chatMessage, ipEndPoint);
+
+            mock.Verify(x => x.SendMessage(chatMessage, ipEndPoint));
+        }
 
         [Test] // 
-        public void TestMessage()
+        public void Test4()
         {
+            var mock = new Mock<IMessageSource>();
 
-            var server = new ChatServer(new MessageSource(1111));
-            Task.Run(() => server.WorkAsync());
+            mock.Setup(x => x.CreateNewIPEndPoint()).Returns(ipEndPoint);
+            mock.Setup(x => x.Receive(ref ipEndPoint)).Returns(chatMessage);
 
-            var first = new FakeChatClient("Tom", new MessageSource(0, "127.0.0.1", 1111));
-            Task.Run(() => first.Start()).Wait(1000);
+            var client = new ChatClient("name", mock.Object);
 
-            var second = new FakeChatClient("Rex", new MessageSource(0, "127.0.0.1", 1111));
-            second.ToName = "Tom";
-            second.ToMessage = "Hi Tom";
-            Task.Run(() => second.Start()).Wait(1000);
+            Task.Run(() => client.Listen()).Wait(1);
 
-            Assert.IsTrue(first.FromName == "Rex");
-            Assert.IsTrue(first.FromMessage == "Hi Tom");
+            mock.Verify(x => x.SendMessage(It.IsAny<ChatMessage>(), ipEndPoint));
         }
 
-        [Test] // 
-        public void TestConfirmation()
-        {
-            var server = new ChatServer(new MessageSource(5757));
-            Task.Run(() => server.WorkAsync());
 
-            var first = new FakeChatClient("Tom", new MessageSource(0, "127.0.0.1", 5757));
-            Task.Run(() => first.Start()).Wait(1000);
-
-            var second = new FakeChatClient("Rex", new MessageSource(0, "127.0.0.1", 5757));
-            second.ToName = "Tom";
-            second.ToMessage = "Hi Tom";
-            Task.Run(() => second.Start()).Wait(2000);
-
-            Assert.IsNotNull(first.MessageConfirm);
-        }
 
         [TearDown]
         public void Teardown()
         {
-            //_server.clients.Clear();
         }
     }
 }

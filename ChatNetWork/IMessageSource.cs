@@ -12,9 +12,8 @@ namespace ChatNetWork
     {
         void SendMessage(ChatMessage chatMessage, IPEndPoint iPEndPoint);
         ChatMessage Receive(ref IPEndPoint iPEndPoint);
+
         IPEndPoint CreateNewIPEndPoint();
-
-
         IPEndPoint GetServerIPEndPoint();   //
     }
 }
