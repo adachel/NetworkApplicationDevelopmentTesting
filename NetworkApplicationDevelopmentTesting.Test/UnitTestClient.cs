@@ -79,8 +79,6 @@ namespace NetworkApplicationDevelopmentTesting.Test
             mock.Verify(x => x.SendMessage(It.IsAny<ChatMessage>(), ipEndPoint));
         }
 
-
-
         [TearDown]
         public void Teardown()
         {
